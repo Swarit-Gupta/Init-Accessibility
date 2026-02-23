@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Init-Accessibility – A toolkit providing elderly tools, neurodivergent-friendly interfaces, and community resources for marginalized groups."
+    />
+    <title>Init-Accessibility – Accessibility for Everyone</title>
+    <link rel="stylesheet" href="styles/main.css" />
+  </head>
+
+  <body>
+    <!-- Skip-to-content link (keyboard / screen-reader navigation) -->
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <!-- Screen-reader live region for announcements -->
+    <div
+      id="live-region"
+      class="live-region"
+      aria-live="polite"
+      aria-atomic="true"
+      role="status"
+    ></div>
+
+    <!-- =====================================================
+         Accessibility Toolbar
+         ===================================================== -->
+    <nav class="a11y-toolbar" aria-label="Accessibility toolbar">
+      <div class="toolbar-inner">
+        <span class="toolbar-label" id="toolbar-heading">Accessibility Toolbar</span>
+
+        <!-- Theme -->
+        <div class="toolbar-group" role="group" aria-label="Theme">
+          <button
+            id="btn-theme-default"
+            class="a11y-btn"
+            type="button"
+            aria-pressed="true"
+            title="Default theme"
+          >
+            <span class="btn-icon" aria-hidden="true">☀️</span>
+            <span>Default</span>
+          </button>
+          <button
+            id="btn-theme-dark"
+            class="a11y-btn"
+            type="button"
+            aria-pressed="false"
+            title="Dark theme"
+          >
+            <span class="btn-icon" aria-hidden="true">🌙</span>
+            <span>Dark</span>
+          </button>
+          <button
+            id="btn-theme-hc"
+            class="a11y-btn"
+            type="button"
+            aria-pressed="false"
+            title="High contrast theme"
+          >
+            <span class="btn-icon" aria-hidden="true">◑</span>
+            <span>High Contrast</span>
+          </button>
+        </div>
+
+        <!-- Font Size -->
+        <div class="toolbar-group" role="group" aria-label="Font size">
+          <button
+            id="btn-font-decrease"
+            class="a11y-btn"
+            type="button"
+            aria-label="Decrease font size"
+            title="Decrease font size"
+          >
+            <span aria-hidden="true">A−</span>
+          </button>
+          <span id="font-size-display" class="font-size-display" aria-live="polite">100%</span>
+          <button
+            id="btn-font-reset"
+            class="a11y-btn"
+            type="button"
+            aria-label="Reset font size to 100%"
+            title="Reset font size"
+          >
+            <span aria-hidden="true">A</span>
+          </button>
+          <button
+            id="btn-font-increase"
+            class="a11y-btn"
+            type="button"
+            aria-label="Increase font size"
+            title="Increase font size"
+          >
+            <span aria-hidden="true">A+</span>
+          </button>
+        </div>
+
+        <!-- Neurodivergent Toggles -->
+        <div class="toolbar-group" role="group" aria-label="Reading aids">
+          <button
+            id="toggle-dyslexia"
+            class="a11y-btn"
+            type="button"
+            aria-pressed="false"
+            title="Toggle dyslexia-friendly font"
+          >
+            <span class="btn-icon" aria-hidden="true">📖</span>
+            <span>Dyslexia Font</span>
+          </button>
+          <button
+            id="toggle-motion"
+            class="a11y-btn"
+            type="button"
+            aria-pressed="false"
+            title="Toggle reduced motion"
+          >
+            <span class="btn-icon" aria-hidden="true">🚫</span>
+            <span>Reduce Motion</span>
+          </button>
+        </div>
+
+        <!-- Color-Blind Mode -->
+        <div class="toolbar-group" role="group" aria-label="Color vision mode">
+          <label for="colorblind-select" class="toolbar-label">Color Vision:</label>
+          <select id="colorblind-select" class="lang-select" aria-label="Color vision mode">
+            <option value="none">Standard</option>
+            <option value="protanopia">Protanopia (red-blind)</option>
+            <option value="deuteranopia">Deuteranopia (green-blind)</option>
+            <option value="tritanopia">Tritanopia (blue-blind)</option>
+          </select>
+        </div>
+
+        <!-- Line Height -->
+        <div class="toolbar-group" role="group" aria-label="Line spacing">
+          <label for="line-height-select" class="toolbar-label">Spacing:</label>
+          <select id="line-height-select" class="lang-select" aria-label="Line spacing">
+            <option value="normal">Normal</option>
+            <option value="relaxed">Relaxed</option>
+            <option value="loose">Loose</option>
+          </select>
+        </div>
+
+        <!-- Language -->
+        <div class="toolbar-group" role="group" aria-label="Language">
+          <label for="lang-select" class="toolbar-label">🌐</label>
+          <select id="lang-select" class="lang-select" aria-label="Select language">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="ar">العربية</option>
+          </select>
+        </div>
+
+        <!-- Reset -->
+        <div class="toolbar-group">
+          <button
+            id="btn-reset"
+            class="a11y-btn"
+            type="button"
+            aria-label="Reset all accessibility preferences"
+            title="Reset all preferences"
+          >
+            <span class="btn-icon" aria-hidden="true">↺</span>
+            <span>Reset</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- =====================================================
+         Site Header
+         ===================================================== -->
+    <header class="site-header" role="banner">
+      <h1 id="hero-title">Accessibility for Everyone</h1>
+      <p id="hero-subtitle">
+        A toolkit designed to empower elderly users, neurodivergent individuals, and marginalized
+        communities with adaptable, inclusive tools.
+      </p>
+    </header>
+
+    <!-- =====================================================
+         Main Content
+         ===================================================== -->
+    <main id="main-content" class="site-main">
+
+      <!-- ── Elderly Tools ── -->
+      <section aria-labelledby="section-elderly">
+        <h2 class="section-title" id="section-elderly">👴 Elderly Tools</h2>
+        <p class="section-desc">
+          Features built to assist older adults with vision, motor, and cognitive challenges.
+        </p>
+
+        <div class="card-grid">
+          <article class="card" aria-label="Large text support">
+            <span class="card-icon" aria-hidden="true">🔤</span>
+            <h3>Large Text &amp; Scaling</h3>
+            <p>
+              Increase font size up to 160% using the toolbar above. All layouts adapt fluidly
+              without horizontal scrolling.
+            </p>
+          </article>
+          <article class="card" aria-label="High contrast mode">
+            <span class="card-icon" aria-hidden="true">◑</span>
+            <h3>High Contrast Mode</h3>
+            <p>
+              Toggle high contrast colours for maximum readability in low-light environments or for
+              users with low vision.
+            </p>
+          </article>
+          <article class="card" aria-label="Text to speech">
+            <span class="card-icon" aria-hidden="true">🔊</span>
+            <h3>Text-to-Speech</h3>
+            <p>
+              Have any passage read aloud using your device's built-in speech synthesis engine,
+              with adjustable reading speed.
+            </p>
+          </article>
+          <article class="card" aria-label="Keyboard navigation">
+            <span class="card-icon" aria-hidden="true">⌨️</span>
+            <h3>Full Keyboard Navigation</h3>
+            <p>
+              Every interactive control is reachable and operable by keyboard alone, with clearly
+              visible focus indicators throughout.
+            </p>
+          </article>
+        </div>
+
+        <!-- TTS Demo -->
+        <div class="demo-panel" id="tts-section">
+          <h3>🔊 Text-to-Speech Reader</h3>
+          <div class="tts-reader">
+            <p id="tts-content">
+              Welcome to Init-Accessibility. This toolkit is designed to help elderly users,
+              neurodivergent individuals, and members of marginalized communities access digital
+              content with ease. Use the toolbar at the top to adjust font size, contrast, and
+              reading speed to suit your needs.
+            </p>
+            <div class="tts-controls">
+              <button id="btn-tts-play" class="btn btn-primary" type="button">
+                ▶ Read Aloud
+              </button>
+              <button id="btn-tts-pause" class="btn btn-outline" type="button">
+                ⏸ Pause / Resume
+              </button>
+              <button id="btn-tts-stop" class="btn btn-outline" type="button">
+                ⏹ Stop
+              </button>
+              <span id="tts-status" class="tts-status" aria-live="polite"></span>
+            </div>
+            <div class="form-group" style="margin-top: 1rem;">
+              <label for="tts-speed" class="form-label">
+                Reading Speed: <span id="tts-speed-display">1.0×</span>
+              </label>
+              <div class="range-group">
+                <span aria-hidden="true">0.5×</span>
+                <input
+                  type="range"
+                  id="tts-speed"
+                  min="0.5"
+                  max="2"
+                  step="0.1"
+                  value="1"
+                  aria-label="Reading speed"
+                  aria-valuemin="0.5"
+                  aria-valuemax="2"
+                  aria-valuenow="1"
+                />
+                <span aria-hidden="true">2.0×</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Neurodivergent-Friendly ── -->
+      <section aria-labelledby="section-neuro">
+        <h2 class="section-title" id="section-neuro">🧠 Neurodivergent-Friendly</h2>
+        <p class="section-desc">
+          Interfaces and settings tailored for users with ADHD, dyslexia, autism, anxiety, and
+          other neurological differences.
+        </p>
+
+        <div class="card-grid">
+          <article class="card" aria-label="Dyslexia font">
+            <span class="card-icon" aria-hidden="true">📖</span>
+            <h3>Dyslexia-Friendly Font</h3>
+            <p>
+              Switch the entire page to a font with weighted, distinct letterforms designed to
+              reduce character reversal for dyslexic readers.
+            </p>
+          </article>
+          <article class="card" aria-label="Reduced animations">
+            <span class="card-icon" aria-hidden="true">🚫</span>
+            <h3>Reduced Animations</h3>
+            <p>
+              Disable all non-essential transitions and animations to prevent distraction or
+              discomfort for users sensitive to motion.
+            </p>
+          </article>
+          <article class="card" aria-label="Adjustable line spacing">
+            <span class="card-icon" aria-hidden="true">↕️</span>
+            <h3>Adjustable Line Spacing</h3>
+            <p>
+              Increase line height to make text easier to track across a page — particularly
+              helpful for users with dyslexia or ADHD.
+            </p>
+          </article>
+          <article class="card" aria-label="Clear focus indicators">
+            <span class="card-icon" aria-hidden="true">🎯</span>
+            <h3>Clear Focus Indicators</h3>
+            <p>
+              All interactive elements display a prominent focus ring when navigated by keyboard,
+              supporting users who rely on visual cues.
+            </p>
+          </article>
+          <article class="card" aria-label="Color vision support">
+            <span class="card-icon" aria-hidden="true">🎨</span>
+            <h3>Color-Vision Support</h3>
+            <p>
+              Select a color-blind simulation mode (protanopia, deuteranopia, or tritanopia) to
+              preview and adapt the palette for your vision type.
+            </p>
+          </article>
+          <article class="card" aria-label="Distraction free reading">
+            <span class="card-icon" aria-hidden="true">🧘</span>
+            <h3>Minimal, Predictable Layout</h3>
+            <p>
+              Consistent layout, clear headings, and plain language help users with executive
+              function challenges navigate without cognitive overload.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ── Community Resources ── -->
+      <section aria-labelledby="section-community">
+        <h2 class="section-title" id="section-community">🌍 Community Resources</h2>
+        <p class="section-desc">
+          Platforms and links supporting marginalized communities, digital equity, and
+          underserved populations.
+        </p>
+
+        <ul class="resource-list" aria-label="Community resources">
+          <li class="resource-item">
+            <h4>Multi-Language Interface</h4>
+            <p>
+              Switch the page into English, Spanish, French, or Arabic using the language selector
+              in the toolbar. RTL layout is applied automatically for Arabic.
+            </p>
+            <span class="resource-tag">Built-in</span>
+          </li>
+          <li class="resource-item">
+            <h4>Web Content Accessibility Guidelines</h4>
+            <p>
+              The W3C WCAG 2.1 standard forms the foundation of every design decision in this
+              toolkit — targeting Level AA compliance.
+            </p>
+            <span class="resource-tag">Standard</span>
+          </li>
+          <li class="resource-item">
+            <h4>Digital Equity Initiative</h4>
+            <p>
+              Programs that bring affordable devices and broadband access to under-resourced homes,
+              schools, and community centres.
+            </p>
+            <span class="resource-tag">Awareness</span>
+          </li>
+          <li class="resource-item">
+            <h4>Screen Reader Compatibility</h4>
+            <p>
+              Semantic HTML and ARIA landmarks ensure compatibility with NVDA, JAWS, VoiceOver, and
+              TalkBack screen readers.
+            </p>
+            <span class="resource-tag">Built-in</span>
+          </li>
+          <li class="resource-item">
+            <h4>Low-Bandwidth Friendly</h4>
+            <p>
+              No external fonts, no heavy images, no JavaScript frameworks — this page loads in
+              under 50 KB for users with limited connectivity.
+            </p>
+            <span class="resource-tag">Built-in</span>
+          </li>
+          <li class="resource-item">
+            <h4>Persistent Preferences</h4>
+            <p>
+              All accessibility settings are saved locally in the browser so returning users don't
+              need to re-configure each visit.
+            </p>
+            <span class="resource-tag">Built-in</span>
+          </li>
+        </ul>
+      </section>
+
+    </main>
+
+    <!-- =====================================================
+         Footer
+         ===================================================== -->
+    <footer class="site-footer" role="contentinfo">
+      <p>
+        Init-Accessibility &mdash; Built with ❤️ for equity and inclusion.
+        <br />
+        Follows
+        <a
+          href="https://www.w3.org/WAI/WCAG21/quickref/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >WCAG 2.1 AA guidelines</a>.
+      </p>
+    </footer>
+
+    <script src="scripts/main.js"></script>
+  </body>
+</html>
