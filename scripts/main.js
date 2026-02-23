@@ -1,6 +1,6 @@
 /**
  * Init-Accessibility – Main Script
- * Handles all accessibility toolbar interactions and feature logic.
+ * Handles all accessibility toolbar interactions, API sync, and feature logic.
  */
 
 "use strict";
@@ -9,6 +9,7 @@
    Constants & State
    ============================================================ */
 const STORAGE_KEY = "a11y-prefs";
+const SESSION_KEY = "a11y-session-id";
 
 const DEFAULT_PREFS = {
   theme: "default",       // "default" | "dark" | "high-contrast"
@@ -22,6 +23,25 @@ const DEFAULT_PREFS = {
 let prefs = loadPrefs();
 let ttsUtterance = null;
 let isSpeaking = false;
+// debounce timer for API sync
+let syncTimer = null;
+
+/* ============================================================
+   Session ID (anonymous UUID for server-side preference sync)
+   ============================================================ */
+function getSessionId() {
+  let id = localStorage.getItem(SESSION_KEY);
+  if (!id) {
+    id = crypto.randomUUID
+      ? crypto.randomUUID()
+      : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+          const r = (Math.random() * 16) | 0;
+          return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+        });
+    localStorage.setItem(SESSION_KEY, id);
+  }
+  return id;
+}
 
 /* ============================================================
    Persistence Helpers
@@ -40,6 +60,39 @@ function savePrefs() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
   } catch {
     // Storage unavailable – silently continue
+  }
+  // Debounce server sync (wait 800 ms after last change)
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncPrefsToServer, 800);
+}
+
+/* ============================================================
+   Server Sync – Preferences API
+   ============================================================ */
+async function syncPrefsToServer() {
+  try {
+    await fetch("/api/preferences", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: getSessionId(), preferences: prefs }),
+    });
+  } catch {
+    // Network unavailable – local copy already saved, silently continue
+  }
+}
+
+async function loadPrefsFromServer() {
+  try {
+    const res = await fetch(`/api/preferences?session_id=${encodeURIComponent(getSessionId())}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.preferences) {
+      prefs = { ...DEFAULT_PREFS, ...data.preferences };
+      savePrefs();
+      applyPrefs();
+    }
+  } catch {
+    // Fall back to localStorage copy already in `prefs`
   }
 }
 
@@ -353,6 +406,111 @@ function setupInputModeDetection() {
 }
 
 /* ============================================================
+   Dynamic Community Resources (from API)
+   ============================================================ */
+async function loadResources() {
+  const container = document.getElementById("resources-list");
+  if (!container) return;
+
+  try {
+    const res = await fetch("/api/resources");
+    if (!res.ok) throw new Error("non-2xx response");
+    const data = await res.json();
+    renderResources(container, data.resources || []);
+  } catch {
+    // Static fallback already in the HTML – just leave it
+  }
+}
+
+function renderResources(container, resources) {
+  if (!resources.length) return;
+  container.innerHTML = resources
+    .map(
+      (r) => `
+    <li class="resource-item">
+      <h4>${escapeHtml(r.title)}</h4>
+      <p>${escapeHtml(r.description)}</p>
+      ${
+        r.url
+          ? `<a class="resource-link" href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">Learn more ↗</a>`
+          : ""
+      }
+      <span class="resource-tag">${escapeHtml(r.tag)}</span>
+    </li>`
+    )
+    .join("");
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
+/* ============================================================
+   Feedback Form
+   ============================================================ */
+function setupFeedbackForm() {
+  const form = document.getElementById("feedback-form");
+  if (!form) return;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const btn = form.querySelector('[type="submit"]');
+    const statusEl = document.getElementById("feedback-status");
+    const formData = new FormData(form);
+
+    const payload = {
+      name: formData.get("name")?.trim() || "",
+      email: formData.get("email")?.trim() || "",
+      category: formData.get("category") || "general",
+      message: formData.get("message")?.trim() || "",
+    };
+
+    if (!payload.message) {
+      showFormStatus(statusEl, "error", "Please enter a message before submitting.");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        showFormStatus(statusEl, "success", data.message || "Feedback received. Thank you!");
+        form.reset();
+      } else {
+        showFormStatus(statusEl, "error", data.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      showFormStatus(statusEl, "error", "Network error. Please check your connection and try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Send Feedback";
+    }
+  });
+}
+
+function showFormStatus(el, type, message) {
+  if (!el) return;
+  el.className = `alert alert-${type === "success" ? "success" : "error"}`;
+  el.textContent = message;
+  el.removeAttribute("hidden");
+  el.focus();
+}
+
+/* ============================================================
    Reset All Preferences
    ============================================================ */
 function setupReset() {
@@ -380,5 +538,10 @@ document.addEventListener("DOMContentLoaded", () => {
   setupLanguageSelector();
   setupInputModeDetection();
   setupReset();
+  setupFeedbackForm();
   applyPrefs();
+  // Load server preferences (overwrites localStorage if different)
+  loadPrefsFromServer();
+  // Load dynamic resources from API
+  loadResources();
 });

@@ -342,7 +342,8 @@
           underserved populations.
         </p>
 
-        <ul class="resource-list" aria-label="Community resources">
+        <!-- Populated dynamically by /api/resources; static fallback below -->
+        <ul id="resources-list" class="resource-list" aria-label="Community resources">
           <li class="resource-item">
             <h4>Multi-Language Interface</h4>
             <p>
@@ -386,12 +387,91 @@
           <li class="resource-item">
             <h4>Persistent Preferences</h4>
             <p>
-              All accessibility settings are saved locally in the browser so returning users don't
-              need to re-configure each visit.
+              Accessibility settings sync to the cloud so returning users keep their setup on any
+              device, not just one browser.
             </p>
             <span class="resource-tag">Built-in</span>
           </li>
         </ul>
+      </section>
+
+      <!-- ── Feedback Form ── -->
+      <section aria-labelledby="section-feedback">
+        <h2 class="section-title" id="section-feedback">💬 Share Your Feedback</h2>
+        <p class="section-desc">
+          Help us improve. Tell us about your experience, report a bug, or suggest a new feature.
+          Your message goes directly into our database.
+        </p>
+
+        <div class="demo-panel">
+          <div
+            id="feedback-status"
+            role="alert"
+            aria-live="polite"
+            class="alert"
+            hidden
+          ></div>
+
+          <form id="feedback-form" novalidate aria-label="Feedback form">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+              <div class="form-group">
+                <label for="feedback-name" class="form-label">Name <span aria-label="optional">(optional)</span></label>
+                <input
+                  type="text"
+                  id="feedback-name"
+                  name="name"
+                  class="form-control"
+                  maxlength="120"
+                  autocomplete="name"
+                  placeholder="Your name"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="feedback-email" class="form-label">Email <span aria-label="optional">(optional)</span></label>
+                <input
+                  type="email"
+                  id="feedback-email"
+                  name="email"
+                  class="form-control"
+                  maxlength="254"
+                  autocomplete="email"
+                  placeholder="your@email.com"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="feedback-category" class="form-label">Category</label>
+              <select id="feedback-category" name="category" class="form-control">
+                <option value="general">General</option>
+                <option value="elderly-tools">Elderly Tools</option>
+                <option value="neurodivergent">Neurodivergent Interface</option>
+                <option value="community-resources">Community Resources</option>
+                <option value="bug-report">Bug Report</option>
+                <option value="feature-request">Feature Request</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="feedback-message" class="form-label">
+                Message <span aria-label="required">*</span>
+              </label>
+              <textarea
+                id="feedback-message"
+                name="message"
+                class="form-control"
+                rows="5"
+                maxlength="2000"
+                required
+                aria-required="true"
+                placeholder="Tell us what's working well, what could be better, or anything you'd like to see…"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Send Feedback</button>
+          </form>
+        </div>
       </section>
 
     </main>

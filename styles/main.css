@@ -690,6 +690,55 @@ input[type="range"]::-moz-range-thumb {
   }
 }
 
+.alert-success {
+  background: #e8f5e9;
+  color: #1b5e20;
+  border-color: #a5d6a7;
+}
+
+.alert-error {
+  background: #fce4ec;
+  color: #880e4f;
+  border-color: #f48fb1;
+}
+
+[data-theme="dark"] .alert-success {
+  background: #1a2e1a;
+  color: #a5d6a7;
+  border-color: #2e5e2e;
+}
+
+[data-theme="dark"] .alert-error {
+  background: #2e1a1a;
+  color: #f48fb1;
+  border-color: #5e2e2e;
+}
+
+[data-theme="high-contrast"] .alert-success {
+  background: #003300;
+  color: #00ff88;
+  border-color: #00ff88;
+}
+
+[data-theme="high-contrast"] .alert-error {
+  background: #330000;
+  color: #ff4444;
+  border-color: #ff4444;
+}
+
+.resource-link {
+  display: inline-block;
+  margin-top: var(--spacing-xs);
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.resource-link:hover {
+  color: var(--color-primary-hover);
+}
+
 /* ---------- Print ---------- */
 @media print {
   .a11y-toolbar,

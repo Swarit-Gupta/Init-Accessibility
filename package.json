@@ -1,0 +1,17 @@
+{
+  "name": "init-accessibility",
+  "version": "1.0.0",
+  "description": "Accessibility toolkit for elderly, neurodivergent, and marginalized communities",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site – nothing to build'",
+    "test": "node tests/api.test.js"
+  },
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0"
+  }
+}
